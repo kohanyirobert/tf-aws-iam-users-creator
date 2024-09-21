@@ -2,7 +2,7 @@
 
 Quick and dirty IAM user creator for demos, etc.
 
-- Add usernames to `userrnames.txt`
+- Add usernames to `usernames.txt` (see `usernames.txt.sample`)
 - Set `AWS_PROFILE`
 - Run `terraform apply`
 - Run `./passwords.sh`
