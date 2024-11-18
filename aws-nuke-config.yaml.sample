@@ -1,0 +1,13 @@
+regions:
+- all
+
+blocklist:
+- <your management account's ID you don't want to touch at all>
+
+accounts:
+  <the account's ID you want to nuke>:
+    filters:
+      IAMRole:
+        - OrganizationAccountAccessRole
+      IAMRolePolicyAttachment:
+        - OrganizationAccountAccessRole -> AdministratorAccess
