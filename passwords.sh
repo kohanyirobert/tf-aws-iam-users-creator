@@ -26,23 +26,6 @@ do
             echo "KO update $username ($output)"
         fi
     else
-        if [[ "$PASSWORD_RESET_REQUIRED" == "YES" ]]
-        then
-            output="$(aws iam create-login-profile \
-                --user-name "$username" \
-                --password "$DEFAULT_PASSWORD" \
-                --password-reset-required)"
-        else
-            output="$(aws iam create-login-profile \
-                --user-name "$username" \
-                --password "$DEFAULT_PASSWORD" \
-                --no-password-reset-required)"
-        fi
-        if [ $? -eq 0 ]
-        then
-            echo "OK create $username"
-        else
-            echo "KO create $username ($output)"
-        fi
+        echo "KO login profile must already exist"
     fi
 done < usernames.txt
