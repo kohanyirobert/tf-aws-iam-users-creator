@@ -7,5 +7,6 @@ Quick and dirty IAM user creator for demos, etc.
 - Run `terraform apply`
 - Run `./passwords.sh`
     - Set `PASSWORD_RESET_REQUIRED` and `DEFAULT_PASSWORD` environment variables
-- Clear `usernames.txt` and run `terraform apply` to delete users
+- Clear `usernames.txt` and run `terraform apply` to delete/remove users
+- Or `terraform destroy` to destroy them completely
 - Run [`aws-nuke`](https://github.com/ekristen/aws-nuke) to clean up (see [`aws-nuke-config.yaml.sample`](aws-nuke-config.yaml.sample))
