@@ -13,8 +13,40 @@ provider "aws" {
   region = "eu-central-1"
 }
 
+data "aws_regions" "all" {}
+
+variable "allowed_region" {
+  description = "AWS region name where Admistrators are allowed to create resources"
+  type        = string
+  default     = "eu-central-1"
+  validation {
+    condition     = contains(data.aws_regions.all.names, var.allowed_region)
+    error_message = "The region must be one of the available AWS regions"
+  }
+}
+
 locals {
   usernames = toset(compact(split("\n", file("usernames.txt"))))
+}
+
+resource "aws_iam_policy" "restrict_to_single_region" {
+  name        = "RestrictToRegion"
+  description = "Allows resource creation to a single region"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Deny",
+        "Action" : "*",
+        "Resource" : "*",
+        "Condition" : {
+          "StringNotEquals" : {
+            "aws:RequestedRegion" : "${var.allowed_region}"
+          }
+        }
+      }
+    ]
+  })
 }
 
 resource "aws_iam_group" "adminstrators" {
@@ -26,13 +58,23 @@ resource "aws_iam_group_policy_attachment" "administrator_access" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
+resource "aws_iam_group_policy_attachment" "attach_restrict_to_single_region" {
+  group      = aws_iam_group.adminstrators.name
+  policy_arn = aws_iam_policy.restrict_to_single_region.arn
+}
+
 resource "aws_iam_user" "user" {
   for_each = toset(local.usernames)
-  name  = each.key
+  name     = each.key
+}
+
+resource "aws_iam_user_login_profile" "profile" {
+  for_each = aws_iam_user.user
+  user     = each.key
 }
 
 resource "aws_iam_user_group_membership" "user_administrator" {
   for_each = aws_iam_user.user
-  user   = each.key
-  groups = [aws_iam_group.adminstrators.name]
+  user     = each.key
+  groups   = [aws_iam_group.adminstrators.name]
 }
