@@ -29,26 +29,6 @@ locals {
   usernames = toset(compact(split("\n", file("usernames.txt"))))
 }
 
-resource "aws_iam_policy" "restrict_to_single_region" {
-  name        = "RestrictToRegion"
-  description = "Allows resource creation to a single region"
-  policy = jsonencode({
-    "Version" : "2012-10-17",
-    "Statement" : [
-      {
-        "Effect" : "Deny",
-        "Action" : "*",
-        "Resource" : "*",
-        "Condition" : {
-          "StringNotEquals" : {
-            "aws:RequestedRegion" : "${var.allowed_region}"
-          }
-        }
-      }
-    ]
-  })
-}
-
 resource "aws_iam_group" "adminstrators" {
   name = "Administrators"
 }
@@ -56,11 +36,6 @@ resource "aws_iam_group" "adminstrators" {
 resource "aws_iam_group_policy_attachment" "administrator_access" {
   group      = aws_iam_group.adminstrators.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-}
-
-resource "aws_iam_group_policy_attachment" "attach_restrict_to_single_region" {
-  group      = aws_iam_group.adminstrators.name
-  policy_arn = aws_iam_policy.restrict_to_single_region.arn
 }
 
 resource "aws_iam_user" "user" {
