@@ -1,6 +1,7 @@
 .terraform/
 .terraform.lock*
 *.tfstate*
+password.txt
 usernames.txt
 aws-nuke-config*yaml
 !aws-nuke-config.sample.yaml
