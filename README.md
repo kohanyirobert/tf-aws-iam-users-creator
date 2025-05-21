@@ -11,3 +11,4 @@ Quick and dirty IAM user creator for demos, etc.
 - Clear `usernames.txt` and run `terraform apply` to delete/remove users
 - Or `terraform destroy` to destroy them completely
 - Run [`aws-nuke`](https://github.com/ekristen/aws-nuke) to clean up (see [`aws-nuke-config.yaml.sample`](aws-nuke-config.yaml.sample))
+    - Usage: `/path/to/aws-nuke run -c aws-nuke-config.some-config.yaml`
